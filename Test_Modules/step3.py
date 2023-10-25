@@ -57,6 +57,7 @@ def run():
         elif event == "Next":
             
             #grab number
+            Curr = int(values['CurrSupply'])
             JP5 = int(values['JP5'])
             JP6 = int(values['JP6'])
             JP7 = int(values['JP7'])
@@ -65,7 +66,7 @@ def run():
             window.close()
             break
         
-    return JP5, JP6, JP7, JP1
+    return Curr, JP5, JP6, JP7, JP1
 
 if __name__ == "__main__":
     print("Debug Mode")

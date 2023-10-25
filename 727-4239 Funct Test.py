@@ -166,3 +166,114 @@ while True:
         
         #test start
         
+        #pretest
+        import Pretest
+        Pretest.run()
+
+        #step 2 - resistance test
+        import Step2
+        ResistResult = Step2.run()
+        Resist_PRI = int(ResistResult[0])
+        Resist_5V = int(ResistResult[1])
+        Resist_3_3V = int(ResistResult[2])
+        Resist_LED = int(ResistResult[3])
+        
+        #check if value is right
+        if Resist_PRI < 5000:
+            # fail
+            sg.popup_ok(" Test Failed")
+            continue
+        window["2.1"].update(Resist_PRI)
+        
+        if Resist_5V < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["2.2"].update(Resist_5V)
+        
+        if Resist_3_3V < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["2.3"].update(Resist_3_3V)
+        
+        if Resist_LED < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["2.4"].update(Resist_LED)
+        
+        
+        #step 3 - Voltage Test
+        import Step3
+        VoltageResult = Step2.run()
+        Voltage_Curr = int(ResistResult[0])
+        Voltage_PRI = int(ResistResult[1])
+        Voltage_5V = int(ResistResult[2])
+        Voltage_3_3V = int(ResistResult[3])
+        Voltage_LED = int(ResistResult[4])
+        
+        #check if value is right
+        if Voltage_Curr < 100:
+            # fail
+            sg.popup_ok("Test Failed")
+            continue
+        window["3.1"].update(Voltage_PRI)
+        
+        if 23 <= Voltage_PRI < 100:
+            # fail
+            sg.popup_ok("Test Failed")
+            continue
+        window["3.1"].update(Voltage_PRI)
+        
+        if 4.8 <= Voltage_5V < 5.2:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["3.2"].update(Voltage_5V)
+        
+        if 3.3 <= Voltage_3_3V < 3.4:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["3.3"].update(Voltage_3_3V)
+        
+        if 14 <= Voltage_LED < 16:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["3.4"].update(Voltage_LED)
+        
+        
+        #Step 4 - PoE Test
+        import Step4
+        PoEResult = Step4.run()
+        PoE_PRI = int(PoEResult[0])
+        PoE_5V = int(PoEResult[1])
+        PoE_3_3V = int(PoEResult[2])
+        PoE_LED = int(PoEResult[3])
+        
+        #check if value is right
+        if PoE_PRI < 5000:
+            # fail
+            sg.popup_ok(" Test Failed")
+            continue
+        window["4.1"].update(PoE_PRI)
+        
+        if PoE_5V < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["4.2"].update(PoE_5V)
+        
+        if PoE_3_3V < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["4.3"].update(PoE_3_3V)
+        
+        if PoE_LED < 5000:
+            # fail
+            sg.popup_ok("Functional Test Failed")
+            continue
+        window["4.4"].update(PoE_LED)
