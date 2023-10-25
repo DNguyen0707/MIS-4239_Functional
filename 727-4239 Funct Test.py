@@ -104,7 +104,7 @@ while True:
     if(event == sg.WIN_CLOSED or event == "Exit"):
         break
     if(event == "Board Layout"):
-        sg.popup_ok(image="Z:/05. Manufacturing/60. Uncontrolled/Troubleshoot/Phat/MIS/727-4239/Layout.png")
+        sg.popup_ok(image="Z:/05. Manufacturing/60. Uncontrolled/Troubleshoot/Phat/MIS/727-4239/Layout.png") #Change Address
     if(event == "Start"):
         
         # Check if empty
@@ -162,3 +162,7 @@ while True:
         dmmNextCal = datetime.datetime.strptime(dmmLastCal, '%m/%d/%y')
         dmmNextCal = dmmNextCal.replace(dmmNextCal.year + 1).strftime('%m/%d/%Y')
         window['dmmNextCal'].update(dmmNextCal)
+
+        
+        #test start
+        
