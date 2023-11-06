@@ -140,8 +140,10 @@ while True:
         #display date for dc
         dcNextCal = datetime.datetime.strptime(dcLastCal, '%m/%d/%y')
         dcNextCal = dcNextCal.replace(dcNextCal.year + 1).strftime('%m/%d/%Y')
-        window['dcNextCal'].update(dcNextCal)
-            
+        os.environ["DC_NEXT_CAL"] = dcNextCal
+        dotenv.set_key(dotenv_file, "DC_NEXT_CAL", os.environ["DC_NEXT_CAL"])
+        window['dcNextCal'].update(dcNextCal) 
+        
         #check DMM data
         if values['dmmModel'] != dmmModel or values['dmmEQID'] != dmmEQID or values['dmmLastCal'] != dmmLastCal:
             #if DMM data is not the same env, update env
@@ -161,14 +163,15 @@ while True:
         #display date for dmm
         dmmNextCal = datetime.datetime.strptime(dmmLastCal, '%m/%d/%y')
         dmmNextCal = dmmNextCal.replace(dmmNextCal.year + 1).strftime('%m/%d/%Y')
+        os.environ["DMM_NEXT_CAL"] = dmmNextCal
+        dotenv.set_key(dotenv_file, "DMM_NEXT_CAL", os.environ["DMM_NEXT_CAL"])
         window['dmmNextCal'].update(dmmNextCal)
-
         
         #test start
         
         #pretest
         import Pretest
-        Pretest.run()
+        PreTestResult = Pretest.run()
 
         #step 2 - resistance test
         import Step2
@@ -178,26 +181,25 @@ while True:
         Resist_3_3V = int(ResistResult[2])
         Resist_LED = int(ResistResult[3])
         
-        #check if value is right
-        if Resist_PRI < 5000:
+        if Resist_PRI < 5000: #More than 5000 to pass
             # fail
             sg.popup_ok(" Test Failed")
             continue
         window["2.1"].update(Resist_PRI)
         
-        if Resist_5V < 5000:
+        if Resist_5V < 5000: #More than 5000 to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
         window["2.2"].update(Resist_5V)
         
-        if Resist_3_3V < 5000:
+        if Resist_3_3V < 5000: #More than 5000 to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
         window["2.3"].update(Resist_3_3V)
         
-        if Resist_LED < 5000:
+        if Resist_LED < 5000: #More than 5000 to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
@@ -206,74 +208,78 @@ while True:
         
         #step 3 - Voltage Test
         import Step3
-        VoltageResult = Step2.run()
-        Voltage_Curr = int(ResistResult[0])
-        Voltage_PRI = int(ResistResult[1])
-        Voltage_5V = int(ResistResult[2])
-        Voltage_3_3V = int(ResistResult[3])
-        Voltage_LED = int(ResistResult[4])
+        VoltageResult = Step3.run()
+        Voltage_Curr = float(VoltageResult[0])
+        Voltage_PRI = float(VoltageResult[1])
+        Voltage_5V = float(VoltageResult[2])
+        Voltage_3_3V = float(VoltageResult[3])
+        Voltage_LED = float(VoltageResult[4])
         
-        #check if value is right
-        if Voltage_Curr < 100:
+        if Voltage_Curr > 100: #Less than 100 to pass
             # fail
             sg.popup_ok("Test Failed")
             continue
-        window["3.1"].update(Voltage_PRI)
+        window["3.1"].update(Voltage_Curr)
         
-        if 23 <= Voltage_PRI < 100:
+        if 23 > Voltage_PRI or Voltage_PRI > 25: #Between 23V and 100V to pass
             # fail
             sg.popup_ok("Test Failed")
             continue
-        window["3.1"].update(Voltage_PRI)
+        window["3.2"].update(Voltage_PRI)
         
-        if 4.8 <= Voltage_5V < 5.2:
+        if 4.8 > Voltage_5V and Voltage_5V > 5.2: #Between 4.8V and 5.2V to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
-        window["3.2"].update(Voltage_5V)
+        window["3.3"].update(Voltage_5V)
         
-        if 3.3 <= Voltage_3_3V < 3.4:
+        if 3.2 > Voltage_3_3V or Voltage_3_3V > 3.4: #Between 3.2V and 3.4V to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
-        window["3.3"].update(Voltage_3_3V)
+        window["3.4"].update(Voltage_3_3V)
         
-        if 14 <= Voltage_LED < 16:
+        if 14 > Voltage_LED or Voltage_LED > 16: #Between 14V and 16V to pass
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
-        window["3.4"].update(Voltage_LED)
+        window["3.5"].update(Voltage_LED)
         
         
         #Step 4 - PoE Test
         import Step4
         PoEResult = Step4.run()
-        PoE_PRI = int(PoEResult[0])
-        PoE_5V = int(PoEResult[1])
-        PoE_3_3V = int(PoEResult[2])
-        PoE_LED = int(PoEResult[3])
+        PoE_PRI = float(PoEResult[0])
+        PoE_5V = float(PoEResult[1])
+        PoE_3_3V = float(PoEResult[2])
+        PoE_LED = float(PoEResult[3])
         
         #check if value is right
-        if PoE_PRI < 5000:
+        if PoE_PRI < 22 or PoE_PRI > 32: #Between 22V and 32V
             # fail
-            sg.popup_ok(" Test Failed")
+            sg.popup_ok("Test Failed")
             continue
         window["4.1"].update(PoE_PRI)
         
-        if PoE_5V < 5000:
+        if PoE_5V < 4.8 or PoE_5V > 5.2: #between 4.8V and 5.2V
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
         window["4.2"].update(PoE_5V)
         
-        if PoE_3_3V < 5000:
+        if PoE_3_3V < 3.2 or PoE_3_3V > 3.4: #Between 3.2V and 3.4V
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
         window["4.3"].update(PoE_3_3V)
         
-        if PoE_LED < 5000:
+        if PoE_LED < 14 or PoE_LED > 16: #between 14V and 16V
             # fail
             sg.popup_ok("Functional Test Failed")
             continue
         window["4.4"].update(PoE_LED)
+        
+        import PostTest
+        if (PostTest.run(wo, serial, values['OP'], date, Resist_PRI, Resist_5V, Resist_3_3V, Resist_LED, Voltage_Curr, Voltage_PRI, Voltage_5V, Voltage_3_3V, Voltage_LED, PoE_PRI, PoE_5V, PoE_3_3V, PoE_LED)):
+            sg.popup_ok(image="Z:/05. Manufacturing/60. Uncontrolled/Troubleshoot/Phat/MIS/727-4239/Pass.png")
+            window['Final'].update("Passed")

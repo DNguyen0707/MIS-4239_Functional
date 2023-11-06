@@ -7,6 +7,7 @@ import openpyxl
 
 def run():
     #global var
+    Curr = 0
     JP5 = 0
     JP6 = 0
     JP7 = 0
@@ -49,19 +50,19 @@ def run():
         event, values = window.read()
 
         if event == sg.WIN_CLOSED or event == 'Exit':
-            return False
+            return 0, 0, 0, 0, 0 
         elif event == sg.WIN_CLOSE_ATTEMPTED_EVENT:
-            return False
+            return 0, 0, 0, 0, 0
         elif event == "Layout":
             sg.popup_ok(image="Z:/05. Manufacturing/60. Uncontrolled/Troubleshoot/Phat/MIS/727-4239/Layout.png") #Change Address
         elif event == "Next":
             
             #grab number
-            Curr = int(values['CurrSupply'])
-            JP5 = int(values['JP5'])
-            JP6 = int(values['JP6'])
-            JP7 = int(values['JP7'])
-            JP1 = int(values['JP1'])
+            Curr = float(values['CurrSupply'])
+            JP5 = float(values['JP5'])
+            JP6 = float(values['JP6'])
+            JP7 = float(values['JP7'])
+            JP1 = float(values['JP1'])
             
             window.close()
             break

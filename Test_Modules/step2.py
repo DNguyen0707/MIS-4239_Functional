@@ -46,9 +46,11 @@ def run():
         event, values = window.read()
         
         if event == sg.WIN_CLOSED or event == 'Exit':
-            return False
+            window.close()
+            return 0, 0, 0, 0
         elif event == sg.WIN_CLOSE_ATTEMPTED_EVENT:
-            return False
+            window.close()
+            return 0, 0, 0, 0
         elif event == "Layout":
             sg.popup_ok(image="Z:/05. Manufacturing/60. Uncontrolled/Troubleshoot/Phat/MIS/727-4239/Layout.png") #Change Address
         elif event == "Next":
